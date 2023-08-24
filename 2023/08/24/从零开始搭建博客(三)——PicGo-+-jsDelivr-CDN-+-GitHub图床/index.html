@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>从零开始搭建博客(二)——基于 GitHub pages 建站 |  一新不可二用</title>
+      <title>从零开始搭建博客(三)——PicGo + jsDelivr CDN + GitHub图床 |  一新不可二用</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -53,7 +53,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-从零开始搭建博客(二)——基于-GitHub-pages-建站"
+  id="post-从零开始搭建博客(三)——PicGo-+-jsDelivr-CDN-+-GitHub图床"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -64,7 +64,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  从零开始搭建博客(二)——基于 GitHub pages 建站
+  从零开始搭建博客(三)——PicGo + jsDelivr CDN + GitHub图床
 </h1>
  
 
@@ -72,15 +72,15 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/08/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%BA%8C)%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E-GitHub-pages-%E5%BB%BA%E7%AB%99/" class="article-date">
-  <time datetime="2023-08-23T08:58:24.000Z" itemprop="datePublished">2023-08-23</time>
+      <a href="/2023/08/24/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%B8%89)%E2%80%94%E2%80%94PicGo-+-jsDelivr-CDN-+-GitHub%E5%9B%BE%E5%BA%8A/" class="article-date">
+  <time datetime="2023-08-24T00:41:45.000Z" itemprop="datePublished">2023-08-24</time>
 </a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">1.2k</span>
+            <span class="post-count">1.5k</span>
         </span>
     </span>
 
@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">4 分钟</span>
+            <span class="post-count">5 分钟</span>
         </span>
     </span>
 </div>
@@ -104,45 +104,33 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在第一篇文章里，我们利用 Hexo 框架在本地搭建了一个精美的博客，可是只能本地访问，要想发布到互联网上，还需要将它部署在网站上。</p>
-<p>博客的功能只要能阅读文章就够了，因此可以考虑将其部署在提供静态网页托管服务的网站上，这样就省去了购买服务器(云主机)，购买域名，购买大网 IP 这些步骤，不仅省钱，更重要的是省事儿。</p>
-<p>当前云计算如此流行，许多平台都提供了静态网页托管服务，其中最方便的当然是 GitHub Pages，只需要注册一个账号就可以使用。GitHub Pages的服务器毕竟在国外，如果觉得访问太慢，也可以选择国内功能相似的 Gitee Pages。</p>
-<p>本篇文章介绍怎样利用 GitHub 提供的免费静态网页托管服务 GitHub Pages 建站。</p>
-<h1 id="一、GitHub-Pages-简介"><a href="#一、GitHub-Pages-简介" class="headerlink" title="一、GitHub Pages 简介"></a>一、GitHub Pages 简介</h1><p>GitHub 是世界上最流行的软件源代码托管服务平台，为什么要提供网页托管服务呢？</p>
-<p>这是因为一个项目的主页如果只有源码，对新接触的人很不友好，不知从何处下手。虽然已经有了 readme.md 文件，但毕竟不如一个直观的网页来的直接。于是 GitHub 就设计了 Pages 功能，允许用户设计一个图文并茂的网页作为项目首页。</p>
-<p>虽然 GitHub Pages 的初衷是提供自定义的项目首页，但是它的玩法不止这一个。因此许多博主都用这个功能来搭建自己的博客，因为它实在是太太方便了。</p>
-<p>去GitHub Pages 官网 <a href="pages.github">link</a>，拉到最后，可以看到官方也推荐使用 GitHub Pages 搭建博客，并且提供了示例教程。</p>
-<h1 id="GitHub-Pages-发布"><a href="#GitHub-Pages-发布" class="headerlink" title="GitHub Pages 发布"></a>GitHub Pages 发布</h1><h2 id="1-配置Git参数"><a href="#1-配置Git参数" class="headerlink" title="1.配置Git参数"></a>1.配置Git参数</h2><p>在博客根目录下，右键，打开Git Bash Here。</p>
-<p>配置用户名和邮箱，这两个参数用于 Git 提交时的身份识别。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中 username 和 username@XXX.com 是你注册 GitHub 的用户名和邮箱</span></span><br><span class="line">git config --global user.name <span class="string">&quot;username&quot;</span></span><br><span class="line">git config --global user.email <span class="string">&quot;username@XXX.com&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>生成 SSH keys，主要用于Git 提交时的权限控制和加密，本地根据 RSA 算法生成公私密钥对，然后将公钥添加到 GitHub 上，本机就可以提交代码到自己的 GitHub 库了。这个是根据当前使用的电脑的一些信息生成的，所以换电脑提交时要重新生成并添加。</p>
-<p>输入下面命令，然后一直按回车，直到结束。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中 username@XXX.com 是你注册 GitHub 的邮箱</span></span><br><span class="line">ssh-keygen -t rsa -C <span class="string">&quot;username@XXX.com&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>输入下面的命令，查看公钥内容，应该是一个<code>ssh-rsa</code>开头，以<code>你的邮箱</code>结尾的长字符串。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat后面的路径就是上图中的公钥文件路径，直接复制过来就可以</span></span><br><span class="line"><span class="built_in">cat</span> /c/Users/XXX/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
-<p>复制公钥内容（其实在Git Bash命令行里，默认选中文字松开鼠标就会自动把选中内容复制到剪贴板，默认鼠标中键是粘贴）。</p>
-<p>打开自己的 Github 主页，点击右上角的头像，点击Settings。</p>
-<p>点击SSH and GPG keys，然后点击New SSH keys。</p>
-<p>Title 可以随便起一个名字，Key 填写上一步复制的公钥内容，然后点击Add SSH key。</p>
-<p>最后执行下面的命令，测试一下 Git 参数是否配置成功。出现<code>你的用户名</code>和<code>successfully</code>字样，说明配置成功。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下面的命令什么都不用改</span></span><br><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-安装Hexo发布插件"><a href="#2-安装Hexo发布插件" class="headerlink" title="2.安装Hexo发布插件"></a>2.安装Hexo发布插件</h2><p>在博客根目录下，右键，打开Git Bash Here。</p>
-<p>输入下面的命令，安装<code>hexo-deployer-git</code>。（安装失败或者卡住，参考第一篇文章修改 npm 源。）</p>
-<p>这个插件用于把生成好的静态页面上传到 GitHub Pages 仓库。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-发布"><a href="#3-发布" class="headerlink" title="3.发布"></a>3.发布</h2><p>从第一篇到现在这么多步骤过去了，可以说前面的所有操作都是在为最后的这一步发布做准备，现在终于到了见证奇迹的时刻了。</p>
-<p>先别着急激动，让我们完成最最后一步配置，我们需要告诉 hexo 发布到哪里去，也就是把文件上传到哪个仓库。</p>
-<p>打开博客根目录配置文件(D:\MyBlog_config.yaml)，拉到文件最后一行，修改为下面的配置（没有的配置项自行添加），保存。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中 xxxxxx 是前面多次用到的你的GitHub用户名</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:xxxxxx/xxxxxx.github.io.git</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-
-<p>OK，现在万事俱备了，执行下面的命令。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意最后变成d了，原来的s表示服务起在本地，现在的d表示部署在远端</span></span><br><span class="line">hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
-
+  <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面我们搭建好了博客，但是现在一篇博客从写完到发布到网站还是有许多步骤要手动处理，比如处理图片路径，发布更新等。我们肯定不希望花费大量时间在部署上，所以有必要把一些重复工作自动化，提升自己的创作体验。接下来两篇文章就做这件事情，首先是完成图床的搭建，然后是通过脚本一键发布博客。</p>
+<p>本篇文章先介绍怎么搭建自己的免费图床。我尝试了各种组合方案，最终选用了最方便的 Typora + PicGo + <a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=GitHub&spm=1001.2101.3001.7020">GitHub</a> + jsDelivr CDN加速的方案。</p>
+<h1 id="一、-PicGo"><a href="#一、-PicGo" class="headerlink" title="一、 PicGo"></a>一、 PicGo</h1><p>PicGo 是一位中国开发者基于 electron-vue 开发的用于快速上传图片并获取图片 URL 链接的开源工具。</p>
+<p>写文章需要引用图片时，我们要打开浏览器将图片上传到图床服务器，再把链接复制粘贴到文章中。这太影响效率了，能不能每次插入图片时自动把图片上传并返回链接地址呢？PicGo 便是做这件事的软件，只要配置好图床类型，就可以直接拖拽图片进行上传并自动返回图片链接，配合 Typora 还可以实现在文章中插入图片时自动上传并替换为链接内容，完全不用感知上传图片的过程。</p>
+<h1 id="二、GitHub-图床"><a href="#二、GitHub-图床" class="headerlink" title="二、GitHub 图床"></a>二、GitHub 图床</h1><h2 id="1-新建仓库"><a href="#1-新建仓库" class="headerlink" title="1.新建仓库"></a>1.新建仓库</h2><p>第一步要先在 GitHub 新建一个仓库用于存储图片。</p>
+<p>打开自己 GitHub <a target="_blank" rel="noopener" href="https://github.com/">主页</a>，点击New新建仓库。</p>
+<p><code>Repository name</code>填写仓库名字，<code>Description</code>填写仓库描述，勾选<code>Add a README file</code>，点击Create repository创建仓库。</p>
+<h2 id="2-获取-repo-tokens"><a href="#2-获取-repo-tokens" class="headerlink" title="2. 获取 repo tokens"></a>2. 获取 repo tokens</h2><p>这个 token 主要用于让 PicGo 有权限往我们的仓库 push 代码(图片)。</p>
+<p>点击自己的头像，选择Settings。</p>
+<p>选择Developer settings。</p>
+<p>点击 Personal access tokens。然后点击Generate new token，因为是敏感操作，此时需要确认密码。</p>
+<p><code>Note</code>填写 token 用途，用于备忘。下面只需要勾选<code>repo</code>，只给更新仓库的权限。最后点击最下面的Generate token创建成功。</p>
+<p>复制字符串下一步使用。注意，为了安全起见此字符串只会出现一次，点击其他页面后就无法再查看了，需要重新创建，所以最好先保存到本地编辑器中。</p>
+<h2 id="3-PicGo-配置"><a href="#3-PicGo-配置" class="headerlink" title="3. PicGo 配置"></a>3. PicGo 配置</h2><p>打开 PicGo ,选择图床设置，选择GitHub图床，填写参数：</p>
+<p>设定仓库名，填写格式为用户名&#x2F;仓库名<br>        设定分支名，填写默认分支master或者main<br>        设定Token，填写上一步获取的 token 值<br>        指定存储路径，选填，可以自定义名称，比如用年月来分类，不填图片会上传在仓库根目录。<br>        设定自定义域名，用于修改返回的 url 前缀，不填则返回原始 url。后面配置CDN加速需要更改此项。<br>        选择设为默认图床，点击确定保存配置。</p>
+<h2 id="4-CDN-加速-jsDelivr"><a href="#4-CDN-加速-jsDelivr" class="headerlink" title="4. CDN 加速(jsDelivr)"></a>4. CDN 加速(jsDelivr)</h2><p>从上一步可以看到 GitHub 存储的图片地址是 <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/">https://raw.githubusercontent.com</a> 开头的网址，这个域名在某些地方可能打不开或者很慢导致图片加载失败，所以我们需要对图片配置 CDN 加速。</p>
+<p>CDN的全称是(Content Delivery Network)，即内容分发网络。其目的是通过在现有的Internet中增加一层新的CACHE(缓存)层，将网站的内容发布到最接近用户的网络”边缘“的节点，使用户可以就近取得所需的内容，提高用户访问网站的响应速度。具体原理见CDN加速原理。通俗来讲，就是 CDN 服务商在全球各个地方建立服务器把要加速的站点进行缓存备份，当你访问站点时实际上是从离你最近的服务器访问缓存，速度自然就快了。</p>
+<p>既然要搭建这么多服务器，服务肯定是要收费的吧。在这个互联网时代，还真有免费 CDN —— jsDelivr CDN，不仅开源免费而且在中国大陆建有许多服务站点，官网还声称是中国大陆唯一拥有许可证的公有 CDN，所以速度、稳定性都可以放心了。</p>
+<p>打开jsDelivr CDN 官网，可以看到 jsDelivr 支持 npm、GitHub、WordPress三个站点的加速，用于我们的GitHub图床是再适合不过了。<br>        在浏览器输入<code>https://cdn.jsdelivr.net/gh/用户名/仓库名/</code>，(注意最后的<code>/</code>不要丢)，可以打开我们在 GitHub 上创建的仓库的文件列表，说明我们在 Github 上创建的仓库已经默认被 jsDelivr 缓存了。</p>
+<p>所以只要把资源链接中的前面部分更改一下就可以使用 CDN 加速了。</p>
+<p>例如，</p>
+<p>原始图片地址的格式为<a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/%E7%94%A8%E6%88%B7%E5%90%8D/%E4%BB%93%E5%BA%93%E5%90%8D/%E5%88%86%E6%94%AF%E5%90%8D/%E7%9B%AE%E5%BD%95/%E5%9B%BE%E7%89%87%E5%90%8D.png%EF%BC%8Chttps://raw.githubusercontent.com/yushuaige/myblog/master/img/image-20201219114500183.png%EF%BC%8C">https://raw.githubusercontent.com/用户名/仓库名/分支名/目录/图片名.png，https://raw.githubusercontent.com/yushuaige/myblog/master/img/image-20201219114500183.png，</a></p>
+<p>更改后的图片地址的格式<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/%E7%94%A8%E6%88%B7%E5%90%8D/%E4%BB%93%E5%BA%93%E5%90%8D@%E5%88%86%E6%94%AF%E5%90%8D/%E7%9B%AE%E5%BD%95/%E5%9B%BE%E7%89%87%E5%90%8D.png%EF%BC%8C">https://cdn.jsdelivr.net/gh/用户名/仓库名@分支名/目录/图片名.png，</a></p>
+<p><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/yushuaige/myblog@master/img/image-20201219114500183.png%E3%80%82">https://cdn.jsdelivr.net/gh/yushuaige/myblog@master/img/image-20201219114500183.png。</a></p>
+<p>可以分别打开一下两个图片网址感受一下速度区别。</p>
+<p>PicGo 中需要改一下自定义域名，之后上传图片自动生成的链接就是 jsDelivr 的链接了。具体就是在设定自定义域名填写<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/%E7%94%A8%E6%88%B7%E5%90%8D/%E4%BB%93%E5%BA%93%E5%90%8D@master%E3%80%82">https://cdn.jsdelivr.net/gh/用户名/仓库名@master。</a></p>
+<h2 id="5-Typora-配置"><a href="#5-Typora-配置" class="headerlink" title="5. Typora 配置"></a>5. Typora 配置</h2><p>打开<code>文件</code>，<code>偏好设置</code>，<code>图像</code>，选择插入图片时<code>上传图片</code>，勾选图中三个选项，上传服务设定选择<code>PicGo (app)</code>，PicGo 路径通过后面的文件夹选择自己电脑上 PicGo 的安装路径。</p>
  
       <!-- reward -->
       
@@ -207,12 +195,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/08/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%BA%8C)%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E-GitHub-pages-%E5%BB%BA%E7%AB%99/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/08/24/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%B8%89)%E2%80%94%E2%80%94PicGo-+-jsDelivr-CDN-+-GitHub%E5%9B%BE%E5%BA%8A/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PicGo/" rel="tag">PicGo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jsDelivr-CDN/" rel="tag">jsDelivr-CDN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li></ul>
 
     </footer>
   </div>
@@ -220,19 +208,19 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/08/24/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%B8%89)%E2%80%94%E2%80%94PicGo-+-jsDelivr-CDN-+-GitHub%E5%9B%BE%E5%BA%8A/" class="article-nav-link">
+      <a href="/2023/08/24/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E5%9B%9B)%E2%80%94%E2%80%94%E4%B8%80%E9%94%AE%E5%8F%91%E5%B8%83%E5%8D%9A%E5%AE%A2/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            从零开始搭建博客(三)——PicGo + jsDelivr CDN + GitHub图床
+            从零开始搭建博客(四)——一键发布博客
           
         </div>
       </a>
     
     
-      <a href="/2023/08/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%B8%80)%E2%80%94%E2%80%94%E6%9C%AC%E5%9C%B0%E6%90%AD%E5%BB%BAhexo%E6%A1%86%E6%9E%B6/" class="article-nav-link">
+      <a href="/2023/08/23/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2(%E4%BA%8C)%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E-GitHub-pages-%E5%BB%BA%E7%AB%99/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">从零开始搭建博客(一)——本地搭建hexo框架</div>
+        <div class="article-nav-title">从零开始搭建博客(二)——基于 GitHub pages 建站</div>
       </a>
     
   </nav>
