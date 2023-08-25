@@ -72,15 +72,15 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/08/24/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%B8%89)%E2%80%94%E2%80%94%E6%96%B0%E5%A2%9E%E5%91%98%E5%B7%A5%E5%8A%9F%E8%83%BD/" class="article-date">
-  <time datetime="2023-08-24T12:22:45.000Z" itemprop="datePublished">2023-08-24</time>
+      <a href="/2023/08/25/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%B8%89)%E2%80%94%E2%80%94%E6%96%B0%E5%A2%9E%E5%91%98%E5%B7%A5%E5%8A%9F%E8%83%BD/" class="article-date">
+  <time datetime="2023-08-25T06:11:45.000Z" itemprop="datePublished">2023-08-25</time>
 </a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">51</span>
+            <span class="post-count">678</span>
         </span>
     </span>
 
@@ -89,7 +89,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1 分钟</span>
+            <span class="post-count">3 分钟</span>
         </span>
     </span>
 </div>
@@ -105,6 +105,30 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一部分实现了登录功能，下部分主要实现员工功能，包括增加、删除、修改权限等，主要流程都是需求分析、代码实现、测试。</p>
+<h1 id="一、新增员工"><a href="#一、新增员工" class="headerlink" title="一、新增员工"></a>一、新增员工</h1><p>执行流程：</p>
+<p>1、页面发送ajax请求，将新员工页面中输入的数据以json形式提交到服务器</p>
+<p>2、服务器Controller按接收页面的提交数据并调用Service将数据进行保存</p>
+<p>3、Service调用Mapper操作数据库，保存数据</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZhuWenjie911/myblogpic@master/img/image-20230825143229152.png" alt="image-20230825143229152"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 新增员工</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> employee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@PostMapping</span></span><br><span class="line"><span class="keyword">public</span> R&lt;String&gt; <span class="title function_">save</span><span class="params">(HttpServletRequest request,<span class="meta">@RequestBody</span> Employee employee)</span>&#123;</span><br><span class="line">    log.info(<span class="string">&quot;新增员工，员工信息：&#123;&#125;&quot;</span>,employee.toString());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置初始密码123456，需要进行md5加密处理</span></span><br><span class="line">    employee.setPassword(DigestUtils.md5DigestAsHex(<span class="string">&quot;123456&quot;</span>.getBytes()));</span><br><span class="line"></span><br><span class="line">    employee.setCreateTime(LocalDateTime.now());</span><br><span class="line">    employee.setUpdateTime(LocalDateTime.now());</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获得当前登录用户的id</span></span><br><span class="line">    <span class="type">Long</span> <span class="variable">empId</span> <span class="operator">=</span> (Long) request.getSession().getAttribute(<span class="string">&quot;employee&quot;</span>);</span><br><span class="line"></span><br><span class="line">    employee.setCreateUser(empId);</span><br><span class="line">    employee.setUpdateUser(empId);</span><br><span class="line"></span><br><span class="line">    employeeService.save(employee);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> R.success(<span class="string">&quot;新增员工成功&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当前的实现还存在一个问题，即新增员工时账号已存在，由于数据库表中的唯一约束，程序会抛出异常。因此需要做异常捕获，通常有两种方式：</p>
+<p>1、在Controller方法中加入try，catch进行异常捕获</p>
+<p>2、使用异常处理器进行全局异常捕获</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 全局异常处理</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@ControllerAdvice(annotations = &#123;RestController.class, Controller.class&#125;)</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 异常处理方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(SQLIntegrityConstraintViolationException.class)</span></span><br><span class="line">    <span class="keyword">public</span> R&lt;String&gt; <span class="title function_">exceptionHandler</span><span class="params">(SQLIntegrityConstraintViolationException ex)</span>&#123;</span><br><span class="line">        log.error(ex.getMessage());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(ex.getMessage().contains(<span class="string">&quot;Duplicate entry&quot;</span>))&#123;</span><br><span class="line">            String[] split = ex.getMessage().split(<span class="string">&quot; &quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> split[<span class="number">2</span>] + <span class="string">&quot;已存在&quot;</span>;</span><br><span class="line">            <span class="keyword">return</span> R.error(msg);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.error(<span class="string">&quot;未知错误&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、员工信息分页查询"><a href="#二、员工信息分页查询" class="headerlink" title="二、员工信息分页查询"></a>二、员工信息分页查询</h1><p>执行流程：</p>
+<p>1、页面发送ajax请求，将分页查询参数（page、pageSize、name）提交到服务端</p>
+<p>2、服务端Controller接收页面提交的数据并调用Service查询数据</p>
+<p>3、Service调用Mapper操作数据库，查询分页数据</p>
+<p>4、Controller将查询到的分页数据响应给页面</p>
+<p>5、页面接收到分页数据并通过ElementUI的Table组件展示到页面上</p>
+<p>创建MybatisPlus的配置插件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置MP的分页插件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisPlusConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MybatisPlusInterceptor <span class="title function_">mybatisPlusInterceptor</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">MybatisPlusInterceptor</span> <span class="variable">mybatisPlusInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusInterceptor</span>();</span><br><span class="line">        mybatisPlusInterceptor.addInnerInterceptor(<span class="keyword">new</span> <span class="title class_">PaginationInnerInterceptor</span>());</span><br><span class="line">        <span class="keyword">return</span> mybatisPlusInterceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>员工分页查询：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 员工信息分页查询</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> page</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pageSize</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> name</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/page&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> R&lt;Page&gt; <span class="title function_">page</span><span class="params">(<span class="type">int</span> page, <span class="type">int</span> pageSize, String name)</span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;page = &#123;&#125;,pageSize = &#123;&#125;,name = &#123;&#125;&quot;</span> ,page,pageSize,name);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//构造分页构造器</span></span><br><span class="line">        <span class="type">Page</span> <span class="variable">pageInfo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Page</span>(page,pageSize);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//构造条件构造器</span></span><br><span class="line">        LambdaQueryWrapper&lt;Employee&gt; queryWrapper = <span class="keyword">new</span> <span class="title class_">LambdaQueryWrapper</span>();</span><br><span class="line">        <span class="comment">//添加过滤条件</span></span><br><span class="line">        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);</span><br><span class="line">        <span class="comment">//添加排序条件</span></span><br><span class="line">        queryWrapper.orderByDesc(Employee::getUpdateTime);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//执行查询</span></span><br><span class="line">        employeeService.page(pageInfo,queryWrapper);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> R.success(pageInfo);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
  
       <!-- reward -->
       
@@ -169,7 +193,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/08/24/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%B8%89)%E2%80%94%E2%80%94%E6%96%B0%E5%A2%9E%E5%91%98%E5%B7%A5%E5%8A%9F%E8%83%BD/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://example.com/2023/08/25/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%B8%89)%E2%80%94%E2%80%94%E6%96%B0%E5%A2%9E%E5%91%98%E5%B7%A5%E5%8A%9F%E8%83%BD/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -182,19 +206,10 @@
    
   <nav class="article-nav">
     
+    
       <a href="/2023/08/25/%E8%BF%87%E6%BB%A4%E5%99%A8%E4%B8%8E%E6%8B%A6%E6%88%AA%E5%99%A8/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            过滤器与拦截器
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2023/08/24/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%BA%8C)%E2%80%94%E2%80%94%E5%90%8E%E5%8F%B0%E7%B3%BB%E7%BB%9F%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">瑞吉外卖(二)——后台系统登录功能</div>
+        <div class="article-nav-title">过滤器与拦截器</div>
       </a>
     
   </nav>
