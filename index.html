@@ -149,6 +149,132 @@
     
     
     <article
+  id="post-过滤器与拦截器"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/08/25/%E8%BF%87%E6%BB%A4%E5%99%A8%E4%B8%8E%E6%8B%A6%E6%88%AA%E5%99%A8/"
+    >过滤器与拦截器</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/08/25/%E8%BF%87%E6%BB%A4%E5%99%A8%E4%B8%8E%E6%8B%A6%E6%88%AA%E5%99%A8/" class="article-date">
+  <time datetime="2023-08-25T00:56:45.000Z" itemprop="datePublished">2023-08-25</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="一、过滤器"><a href="#一、过滤器" class="headerlink" title="一、过滤器"></a>一、过滤器</h1><h2 id="1-过滤器定义"><a href="#1-过滤器定义" class="headerlink" title="1.过滤器定义"></a>1.过滤器定义</h2><p>过滤器是JavaWeb的三大组件之一，是实现Filter接口的Java类。</p>
+<p>过滤器是实现对请求资源（jsp、servlet、html）的过滤功能，是一个运行在服务器的程序，优先于请求资源（jsp、servlet、html）之前执行。</p>
+<p>当浏览器发送请求给服务器的时候，先执⾏过滤器，然后才访问Web的资源。服务器响应Response，从Web资源抵达浏览器之前，也会途径过滤器。</p>
+<p>在很多Web开发中，都会用到过滤器（Filter），如参数过滤、防止SQL注入、防止页面攻击、过滤敏感字符、解决网站乱码、空参数矫正、Token验证、Session验证、点击率统计等。</p>
+<h2 id="2-为何要使用过滤器"><a href="#2-为何要使用过滤器" class="headerlink" title="2.为何要使用过滤器"></a>2.为何要使用过滤器</h2><p>在Web开发中，经常需要对前后端所有接口进行过滤处理，因为单独分开做会产生重复代码。</p>
+<h2 id="3-使用Filter的步骤"><a href="#3-使用Filter的步骤" class="headerlink" title="3.使用Filter的步骤"></a>3.使用Filter的步骤</h2><p>（1）新建类，实现Filter抽类类。</p>
+<p>（2）重写init、doFilter、destroy方法。</p>
+<p>（3）在Spring Boot入口类中添加注解@ServletComponentScan，以注册Filter。</p>
+<p>init()：该方法在容器启动初始化过滤器时被调用，它在Filter的整个生命周期只会被调用一次，这个方法必须执行成功，否则过滤器会不起作用。</p>
+<p>doFilter()：容器中的每一次请求都会调用该方法，FilterChain用来调用下一个过滤器Filter。</p>
+<p>destroy()：容器销毁时被调用。一般在方法中销毁或关闭资源，也只会被调用一次。</p>
+<p><strong>在Java中使用了链式结构。把所有的过滤器都放在FilterChain⾥边，如果符合条件，就执⾏下⼀个过滤器（如果没有过滤器了，就执⾏⽬标资源）。</strong></p>
+<h1 id="二、拦截器"><a href="#二、拦截器" class="headerlink" title="二、拦截器"></a>二、拦截器</h1><h2 id="1-拦截器的定义"><a href="#1-拦截器的定义" class="headerlink" title="1.拦截器的定义"></a>1.拦截器的定义</h2><p>SpringMVC的处理器拦截器类似于Servlet开发中的过滤器Filter,用于对处理器进行预处理和后处理。开发者可以自己定义一些拦截器来实现特定的功能。</p>
+<p>拦截器它是链式调用，一个应用中可以同时存在多个拦截器Interceptor，一个请求也可以触发多个拦截器，而每个拦截器的调用会依据它的声明顺序依次执行。</p>
+<h2 id="2-拦截器的核心API"><a href="#2-拦截器的核心API" class="headerlink" title="2.拦截器的核心API"></a>2.拦截器的核心API</h2><p>springMVC拦截器提供三个方法分别是preHandle、postHandle、afterCompletion，我们就是通过重写这几个方法来对用户的请求进行拦截处理的。</p>
+<p>①preHandle() ：这个方法将在请求处理之前进行调用。<strong>「注意」：如果该方法的返回值为false ，将视为当前请求结束，不仅自身的拦截器会失效，还会导致其他的拦截器也不再执行。</strong><br>        ②postHandle()：只有在 preHandle() 方法返回值为true 时才会执行。会在Controller 中的方法调用之后，DispatcherServlet 返回渲染视图之前被调用。<strong>「有意思的是」：postHandle() 方法被调用的顺序跟 preHandle() 是相反的，先声明的拦截器 preHandle() 方法先执行，而postHandle()方法反而会后执行。</strong><br>        ③afterCompletion()：只有在 preHandle() 方法返回值为true 时才会执行，在整个请求结束之后， DispatcherServlet 渲染了对应的视图之后执行。</p>
+<h1 id="三、过滤器与拦截器的区别"><a href="#三、过滤器与拦截器的区别" class="headerlink" title="三、过滤器与拦截器的区别"></a>三、过滤器与拦截器的区别</h1><h2 id="1-相同点"><a href="#1-相同点" class="headerlink" title="1.相同点"></a>1.相同点</h2><p>过滤器与拦截器都体现了AOP的编程思想，都可以实现例如日志、登录鉴权等功能。</p>
+<h2 id="2-不同点"><a href="#2-不同点" class="headerlink" title="2.不同点"></a>2.不同点</h2><p>①：拦截器是基于java的反射机制（动态代理）的实现，而过滤器是基于函数的回调。</p>
+<p>②：拦截器不依赖于servlet容器，而过滤器依赖于servlet容器。</p>
+<p>③：拦截器只对Controller请求起作用，而过滤器则可以对几乎所有的请求起作用。</p>
+<p>④：拦截器可以访问Controller上下文、值、栈里面的对象，而过滤器不可以。</p>
+<p>⑤：在spring容器的生命周期中，拦截器可以多次被调用，而过滤器只能在容器初始化时被调用一次。</p>
+<p>⑥：拦截器可以获取IOC容器中的各个bean，而过滤器不行，这点很重要，在拦截器里注入一个service，可以调用业务逻辑。</p>
+<h2 id="3-触发机制"><a href="#3-触发机制" class="headerlink" title="3.触发机制"></a>3.触发机制</h2><p><img src="C:\Users\Zwj\AppData\Roaming\Typora\typora-user-images\image-20230825091758698.png" alt="image-20230825091758698"></p>
+<p>过滤器Filter是在请求进入容器后，但在进入servlet之前进行预处理，请求结束是在servlet处理完以后。</p>
+<p>拦截器 Interceptor 是在请求进入servlet后，在进入Controller之前进行预处理的，Controller 中渲染了对应的视图之后请求结束。</p>
+<p>过滤器几乎可以对所有进入容器的请求起作用，而拦截器只会对Controller中请求或访问static目录下的资源请求起作用。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/" rel="tag">spring</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
+  id="post-瑞吉外卖(三)——新增员工功能"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/08/24/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%B8%89)%E2%80%94%E2%80%94%E6%96%B0%E5%A2%9E%E5%91%98%E5%B7%A5%E5%8A%9F%E8%83%BD/"
+    >瑞吉外卖(三)——员工功能</a> 
+</h2>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/08/24/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96(%E4%B8%89)%E2%80%94%E2%80%94%E6%96%B0%E5%A2%9E%E5%91%98%E5%B7%A5%E5%8A%9F%E8%83%BD/" class="article-date">
+  <time datetime="2023-08-24T12:22:45.000Z" itemprop="datePublished">2023-08-24</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一部分实现了登录功能，下部分主要实现员工功能，包括增加、删除、修改权限等，主要流程都是需求分析、代码实现、测试。</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96/" rel="tag">瑞吉外卖</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+   
+  
+</article>
+
+    
+    <article
   id="post-瑞吉外卖(二)——后台系统登录功能"
   class="article article-type-post"
   itemscope
@@ -178,11 +304,11 @@
        
   <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面我们完成了瑞吉外卖项目环境的搭建，下面主要实现后台系统的登录功能。</p>
 <h1 id="一、需求分析"><a href="#一、需求分析" class="headerlink" title="一、需求分析"></a>一、需求分析</h1><p>进入浏览器访问<a target="_blank" rel="noopener" href="http://localhost:8080/backend/page/login/login.html">login</a>界面，点击登录，进入控制台查看详细信息。</p>
-<p><img src="C:\Users\Zwj\AppData\Roaming\Typora\typora-user-images\image-20230824143423184.png" alt="image-20230824143423184"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZhuWenjie911/myblogpic@master/img/image-20230824143423184.png" alt="image-20230824143423184"></p>
 <p>可以看到axios请求类型、路径等信息</p>
-<p><img src="C:\Users\Zwj\AppData\Roaming\Typora\typora-user-images\image-20230824142851161.png" alt="image-20230824142851161"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZhuWenjie911/myblogpic@master/img/image-20230824142851161.png" alt="image-20230824142851161"></p>
 <p>观察login.html文件中vue方法，查看匹配方法，发现后端须提供以下信息</p>
-<p><img src="C:\Users\Zwj\AppData\Roaming\Typora\typora-user-images\image-20230824144339479.png" alt="image-20230824144339479"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZhuWenjie911/myblogpic@master/img/image-20230824144339479.png" alt="image-20230824144339479"></p>
 <h1 id="二、代码实现"><a href="#二、代码实现" class="headerlink" title="二、代码实现"></a>二、代码实现</h1><h2 id="1-创建Employee实体类"><a href="#1-创建Employee实体类" class="headerlink" title="1.创建Employee实体类"></a>1.创建Employee实体类</h2><p>Employee类与数据库表进行映射</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.zwj.reggie.entity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.FieldFill;</span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.annotation.TableField;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"><span class="keyword">import</span> java.time.LocalDateTime;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 员工实体</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Employee</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String phone;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String idNumber;<span class="comment">//身份证号码</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer status;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TableField(fill = FieldFill.INSERT)</span> <span class="comment">//插入时填充字段</span></span><br><span class="line">    <span class="keyword">private</span> LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TableField(fill = FieldFill.INSERT_UPDATE)</span> <span class="comment">//插入和更新时填充字段</span></span><br><span class="line">    <span class="keyword">private</span> LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TableField(fill = FieldFill.INSERT)</span> <span class="comment">//插入时填充字段</span></span><br><span class="line">    <span class="keyword">private</span> Long createUser;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@TableField(fill = FieldFill.INSERT_UPDATE)</span> <span class="comment">//插入和更新时填充字段</span></span><br><span class="line">    <span class="keyword">private</span> Long updateUser;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -207,12 +333,20 @@
 <p>4、密码比对，如果不一致返回登录失败</p>
 <p>5、查看员工状态是否已禁用，禁用则返回员工已禁用结果</p>
 <p>6、登录成功，将员工id存入Session并返回登录成功结果</p>
-<p><img src="C:/Users/Zwj/AppData/Roaming/Typora/typora-user-images/image-20230824152439657.png" alt="image-20230824152439657"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZhuWenjie911/myblogpic@master/img/image-20230824152439657.png" alt="image-20230824152439657"></p>
 <p>按照以上步骤，实现login方法</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 员工登录</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> R&lt;Employee&gt; <span class="title function_">login</span><span class="params">(HttpServletRequest request, <span class="meta">@RequestBody</span> Employee employee)</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1、将页面提交的密码password进行md5加密处理</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> employee.getPassword();</span><br><span class="line">        password = DigestUtils.md5DigestAsHex(password.getBytes());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2、根据页面提交的用户名username查询数据库</span></span><br><span class="line">        LambdaQueryWrapper&lt;Employee&gt; queryWrapper = <span class="keyword">new</span> <span class="title class_">LambdaQueryWrapper</span>&lt;&gt;();</span><br><span class="line">        queryWrapper.eq(Employee::getUsername,employee.getUsername());</span><br><span class="line">        <span class="type">Employee</span> <span class="variable">emp</span> <span class="operator">=</span> employeeService.getOne(queryWrapper);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3、如果没有查询到则返回登录失败结果</span></span><br><span class="line">        <span class="keyword">if</span>(emp == <span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> R.error(<span class="string">&quot;登录失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4、密码比对，如果不一致则返回登录失败结果</span></span><br><span class="line">        <span class="keyword">if</span>(!emp.getPassword().equals(password))&#123;</span><br><span class="line">            <span class="keyword">return</span> R.error(<span class="string">&quot;登录失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//5、查看员工状态，如果为已禁用状态，则返回员工已禁用结果</span></span><br><span class="line">        <span class="keyword">if</span>(emp.getStatus() == <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> R.error(<span class="string">&quot;账号已禁用&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//6、登录成功，将员工id存入Session并返回登录成功结果</span></span><br><span class="line">        request.getSession().setAttribute(<span class="string">&quot;employee&quot;</span>,emp.getId());</span><br><span class="line">        <span class="keyword">return</span> R.success(emp);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>实现logout方法</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 员工退出</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/logout&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> R&lt;String&gt; <span class="title function_">logout</span><span class="params">(HttpServletRequest request)</span>&#123;</span><br><span class="line">        <span class="comment">//清理Session中保存的当前登录员工的id</span></span><br><span class="line">        request.getSession().removeAttribute(<span class="string">&quot;employee&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> R.success(<span class="string">&quot;退出成功&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、功能完善"><a href="#三、功能完善" class="headerlink" title="三、功能完善"></a>三、功能完善</h1><p>由于当前项目可以在没有登录的情况下直接通过访问index.html的方式进入主界面进行访问，为了规避这种情况，因此需要采用过滤器或拦截器来处理请求，该部分使用过滤器方式。</p>
+<h2 id="1-实现步骤："><a href="#1-实现步骤：" class="headerlink" title="1.实现步骤："></a>1.实现步骤：</h2><p>a.创建自定义过滤器LoginCheckFilter</p>
+<p>b.在启动类上加上注解@ServletComponentScan</p>
+<p>c.完善过滤器的逻辑处理</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZhuWenjie911/myblogpic@master/img/image-20230824195949933.png" alt="image-20230824195949933"></p>
+<p>LoginCheckFilter处理逻辑代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 检查用户是否已经完成登录</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@WebFilter(filterName = &quot;loginCheckFilter&quot;,urlPatterns = &quot;/*&quot;)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginCheckFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span>&#123;</span><br><span class="line">    <span class="comment">//路径匹配器，支持通配符</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">AntPathMatcher</span> <span class="variable">PATH_MATCHER</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AntPathMatcher</span>();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        <span class="type">HttpServletRequest</span> <span class="variable">request</span> <span class="operator">=</span> (HttpServletRequest) servletRequest;</span><br><span class="line">        <span class="type">HttpServletResponse</span> <span class="variable">response</span> <span class="operator">=</span> (HttpServletResponse) servletResponse;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1、获取本次请求的URI</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">requestURI</span> <span class="operator">=</span> request.getRequestURI();<span class="comment">// /backend/index.html</span></span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;拦截到请求：&#123;&#125;&quot;</span>,requestURI);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//定义不需要处理的请求路径</span></span><br><span class="line">        String[] urls = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;</span><br><span class="line">                <span class="string">&quot;/employee/login&quot;</span>,</span><br><span class="line">                <span class="string">&quot;/employee/logout&quot;</span>,</span><br><span class="line">                <span class="string">&quot;/backend/**&quot;</span>,</span><br><span class="line">                <span class="string">&quot;/front/**&quot;</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//2、判断本次请求是否需要处理</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">check</span> <span class="operator">=</span> check(urls, requestURI);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3、如果不需要处理，则直接放行</span></span><br><span class="line">        <span class="keyword">if</span>(check)&#123;</span><br><span class="line">            log.info(<span class="string">&quot;本次请求&#123;&#125;不需要处理&quot;</span>,requestURI);</span><br><span class="line">            filterChain.doFilter(request,response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4、判断登录状态，如果已登录，则直接放行</span></span><br><span class="line">        <span class="keyword">if</span>(request.getSession().getAttribute(<span class="string">&quot;employee&quot;</span>) != <span class="literal">null</span>)&#123;</span><br><span class="line">            log.info(<span class="string">&quot;用户已登录，用户id为：&#123;&#125;&quot;</span>,request.getSession().getAttribute(<span class="string">&quot;employee&quot;</span>));</span><br><span class="line"></span><br><span class="line">            <span class="type">Long</span> <span class="variable">empId</span> <span class="operator">=</span> (Long) request.getSession().getAttribute(<span class="string">&quot;employee&quot;</span>);</span><br><span class="line">            BaseContext.setCurrentId(empId);</span><br><span class="line"></span><br><span class="line">            filterChain.doFilter(request,response);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;用户未登录&quot;</span>);</span><br><span class="line">        <span class="comment">//5、如果未登录则返回未登录结果，通过输出流方式向客户端页面响应数据</span></span><br><span class="line">        response.getWriter().write(JSON.toJSONString(R.error(<span class="string">&quot;NOTLOGIN&quot;</span>)));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 路径匹配，检查本次请求是否需要放行</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> urls</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> requestURI</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(String[] urls,String requestURI)</span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (String url : urls) &#123;</span><br><span class="line">            <span class="type">boolean</span> <span class="variable">match</span> <span class="operator">=</span> PATH_MATCHER.match(url, requestURI);</span><br><span class="line">            <span class="keyword">if</span>(match)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
  
       <!-- reward -->
@@ -714,108 +848,14 @@
 </article>
 
     
-    <article
-  id="post-Second-Blog"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/01/11/Second-Blog/"
-    >我的第一篇博客</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/01/11/Second-Blog/" class="article-date">
-  <time datetime="2021-01-11T11:50:43.000Z" itemprop="datePublished">2021-01-11</time>
-</a>    
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-   
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-  
-</article>
-
-    
-    <article
-  id="post-我的第一篇博客"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2021/01/11/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/"
-    >我的第一篇博客</a> 
-</h2>
- 
-
-      
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2021/01/11/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" class="article-date">
-  <time datetime="2021-01-11T11:50:43.000Z" itemprop="datePublished">2021-01-11</time>
-</a>    
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p>11111</p>
- 
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" rel="tag">博客搭建</a></li></ul>
-
-    </footer>
-  </div>
-
-   
-   
-  
-</article>
-
-    
   </article>
   
 
+  
+  <nav class="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+  </nav>
   
 </section>
 </div>
